@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PawMart – Your Pet Universe</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --warm: #FFF0DC;
+    --amber: #F59E0B;
+    --amber-dark: #D97706;
+    --brown: #92400E;
+    --teal: #0D9488;
+    --teal-light: #CCFBF1;
+    --teal-dark: #0F766E;
+    --rose: #F43F5E;
+    --rose-light: #FFE4E6;
+    --slate: #1E293B;
+    --slate-mid: #334155;
+    --slate-light: #64748B;
+    --border: #E2E8F0;
+    --white: #FFFFFF;
+    --success: #10B981;
+    --error: #EF4444;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--slate); min-height:100vh; }
+  h1,h2,h3,h4,h5,h6,.logo,.nav-logo,.section-heading,.card-title,.hero-heading { font-family:'Poppins',sans-serif; }
+
+  /* ───── SCROLLBAR ───── */
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--warm); }
+  ::-webkit-scrollbar-thumb { background:var(--amber); border-radius:3px; }
+
+  /* ───── PAGES ───── */
+  .page { display:none; min-height:100vh; }
+  .page.active { display:flex; flex-direction:column; }
+
+  /* ══════════════════════════════════════
+     LOGIN PAGE
+  ══════════════════════════════════════ */
+  #login-page {
+    background: linear-gradient(135deg, #FFF8F0 0%, #FFF0DC 50%, #CCFBF1 100%);
+    align-items:center; justify-content:center; padding:2rem;
+  }
+  .login-card {
+    background:var(--white); border-radius:28px; padding:3rem 2.5rem;
+    box-shadow:var(--shadow-lg); width:100%; max-width:460px;
+    border:1px solid var(--border); position:relative; overflow:hidden;
+  }
+  .login-card::before {
+    content:''; position:absolute; top:-60px; right:-60px;
+    width:180px; height:180px; border-radius:50%;
+    background:linear-gradient(135deg,var(--amber),var(--teal));
+    opacity:0.08;
+  }
+  .login-logo { text-align:center; margin-bottom:2rem; }
+  .login-logo .paw { font-size:3rem; display:block; margin-bottom:.5rem; }
+  .login-logo h1 { font-size:2rem; font-weight:800; color:var(--slate); }
+  .login-logo h1 span { color:var(--amber-dark); }
+  .login-logo p { color:var(--slate-light); font-size:.9rem; margin-top:.25rem; }
+  .welcome-back {
+    background:linear-gradient(135deg,var(--teal-light),var(--warm));
+    border:1px solid var(--teal); border-radius:12px;
+    padding:.75rem 1rem; margin-bottom:1.5rem; display:none;
+    font-size:.9rem; color:var(--teal-dark); font-weight:500; text-align:center;
+  }
+  .form-group { margin-bottom:1.25rem; }
+  .form-group label { display:block; font-size:.85rem; font-weight:600; color:var(--slate-mid); margin-bottom:.4rem; }
+  .form-group input, .form-group select {
+    width:100%; padding:.8rem 1rem; border:2px solid var(--border);
+    border-radius:12px; font-family:'Inter',sans-serif; font-size:.95rem;
+    color:var(--slate); background:var(--cream); transition:border-color .2s,box-shadow .2s;
+    outline:none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color:var(--amber); box-shadow:0 0 0 3px rgba(245,158,11,0.12);
+  }
+  .field-error { display:none; color:var(--error); font-size:.8rem; margin-top:.3rem; font-weight:500; }
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    padding:.85rem 1.8rem; border-radius:14px; border:none; cursor:pointer;
+    font-family:'Poppins',sans-serif; font-weight:600; font-size:.95rem; transition:all .2s;
+    text-decoration:none;
+  }
+  .btn-primary { background:linear-gradient(135deg,var(--amber),var(--amber-dark)); color:var(--white); width:100%; }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(245,158,11,0.35); }
+  .btn-teal { background:linear-gradient(135deg,var(--teal),var(--teal-dark)); color:var(--white); }
+  .btn-teal:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(13,148,136,0.35); }
+  .btn-outline { background:transparent; border:2px solid var(--border); color:var(--slate-mid); }
+  .btn-outline:hover { border-color:var(--amber); color:var(--amber-dark); }
+  .btn-rose { background:linear-gradient(135deg,var(--rose),#BE123C); color:var(--white); }
+  .btn-rose:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(244,63,94,0.35); }
+  .btn-sm { padding:.5rem 1rem; font-size:.82rem; border-radius:10px; }
+  .divider { text-align:center; color:var(--slate-light); font-size:.82rem; margin:1rem 0; position:relative; }
+  .divider::before, .divider::after { content:''; position:absolute; top:50%; width:42%; height:1px; background:var(--border); }
+  .divider::before { left:0; } .divider::after { right:0; }
+  .api-key-section { background:var(--warm); border-radius:12px; padding:1rem; margin-bottom:1.25rem; border:1px dashed var(--amber); }
+  .api-key-section label { font-size:.82rem; color:var(--brown); font-weight:600; margin-bottom:.4rem; display:block; }
+  .api-key-section small { font-size:.75rem; color:var(--slate-light); display:block; margin-top:.25rem; }
+  .token-demo { margin-top:.75rem; }
+  .token-badge {
+    display:inline-flex; align-items:center; gap:.4rem; background:var(--white);
+    border:1px solid var(--teal); border-radius:8px; padding:.35rem .75rem;
+    font-size:.78rem; color:var(--teal-dark); font-weight:500; display:none;
+  }
+
+  /* ══════════════════════════════════════
+     MAIN APP HEADER
+  ══════════════════════════════════════ */
+  .app-header {
+    background:var(--white); border-bottom:2px solid var(--warm);
+    padding:0 2rem; position:sticky; top:0; z-index:100;
+    box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  }
+  .header-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; gap:1.5rem; padding:.9rem 0; }
+  .nav-logo { font-size:1.5rem; font-weight:800; color:var(--slate); white-space:nowrap; }
+  .nav-logo span { color:var(--amber-dark); }
+  .live-clock { font-size:.82rem; color:var(--slate-light); font-weight:500; white-space:nowrap; background:var(--warm); padding:.3rem .75rem; border-radius:8px; }
+  .nav-tabs { display:flex; gap:.4rem; flex:1; justify-content:center; }
+  .nav-tab {
+    padding:.55rem 1.2rem; border-radius:10px; border:2px solid transparent;
+    font-family:'Poppins',sans-serif; font-weight:600; font-size:.85rem;
+    cursor:pointer; transition:all .2s; color:var(--slate-light); background:none;
+    white-space:nowrap;
+  }
+  .nav-tab.active, .nav-tab:hover { background:var(--warm); color:var(--amber-dark); border-color:var(--amber); }
+  .nav-tab.active { color:var(--amber-dark); }
+  .header-right { display:flex; align-items:center; gap:.75rem; }
+  .user-chip { display:flex; align-items:center; gap:.5rem; background:var(--warm); padding:.35rem .85rem; border-radius:10px; font-size:.82rem; font-weight:600; color:var(--slate-mid); }
+  .user-chip .dot { width:8px; height:8px; background:var(--success); border-radius:50%; }
+  .logout-btn { background:none; border:2px solid var(--border); padding:.35rem .85rem; border-radius:10px; font-size:.82rem; font-family:'Poppins',sans-serif; font-weight:600; cursor:pointer; color:var(--slate-light); transition:all .2s; }
+  .logout-btn:hover { border-color:var(--rose); color:var(--rose); }
+
+  /* ══════════════════════════════════════
+     MAIN CONTENT CONTAINER
+  ══════════════════════════════════════ */
+  .app-main { flex:1; max-width:1300px; margin:0 auto; width:100%; padding:2rem; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* ══════════════════════════════════════
+     SECTION HEADING
+  ══════════════════════════════════════ */
+  .section-heading { font-size:1.8rem; font-weight:800; color:var(--slate); margin-bottom:.3rem; }
+  .section-sub { color:var(--slate-light); font-size:.95rem; margin-bottom:1.75rem; }
+
+  /* ══════════════════════════════════════
+     HERO (Supplies tab)
+  ══════════════════════════════════════ */
+  .hero {
+    background:linear-gradient(135deg,var(--slate) 0%,var(--slate-mid) 100%);
+    border-radius:24px; padding:2.5rem; margin-bottom:2rem;
+    display:flex; align-items:center; justify-content:space-between; gap:2rem;
+    overflow:hidden; position:relative;
+  }
+  .hero::before {
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:240px; height:240px; border-radius:50%;
+    background:linear-gradient(135deg,var(--amber),var(--teal)); opacity:.15;
+  }
+  .hero-text { flex:1; }
+  .hero-badge { display:inline-block; background:var(--amber); color:var(--white); font-family:'Poppins',sans-serif; font-weight:700; font-size:.75rem; padding:.3rem .85rem; border-radius:20px; margin-bottom:1rem; letter-spacing:.05em; text-transform:uppercase; }
+  .hero-heading { font-size:2.2rem; font-weight:800; color:var(--white); line-height:1.2; margin-bottom:.75rem; }
+  .hero-heading span { color:var(--amber); }
+  .hero-desc { color:#94A3B8; font-size:.95rem; line-height:1.6; margin-bottom:1.5rem; max-width:460px; }
+  .hero-emoji { font-size:6rem; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.3)); }
+
+  /* ══════════════════════════════════════
+     PRODUCT GRID
+  ══════════════════════════════════════ */
+  .products-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:.75rem; }
+  .filter-bar { display:flex; gap:.5rem; flex-wrap:wrap; }
+  .filter-btn { padding:.4rem 1rem; border:2px solid var(--border); border-radius:20px; background:var(--white); font-size:.82rem; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; color:var(--slate-light); transition:all .2s; }
+  .filter-btn.active, .filter-btn:hover { border-color:var(--amber); color:var(--amber-dark); background:var(--warm); }
+  .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.25rem; margin-bottom:2rem; }
+  .product-card {
+    background:var(--white); border-radius:20px; overflow:hidden;
+    border:2px solid var(--border); transition:all .25s; cursor:pointer;
+  }
+  .product-card:hover { transform:translateY(-5px); border-color:var(--amber); box-shadow:var(--shadow-lg); }
+  .product-img { height:150px; display:flex; align-items:center; justify-content:center; font-size:4rem; background:var(--warm); }
+  .product-body { padding:1rem; }
+  .product-category { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--teal); margin-bottom:.3rem; }
+  .card-title { font-size:1rem; font-weight:700; color:var(--slate); margin-bottom:.25rem; }
+  .product-price { font-size:1.1rem; font-weight:700; color:var(--amber-dark); margin-bottom:.75rem; }
+  .product-footer { display:flex; gap:.5rem; }
+
+  /* ══════════════════════════════════════
+     FORM SECTION (Registration/Checkout)
+  ══════════════════════════════════════ */
+  .form-card { background:var(--white); border-radius:20px; padding:2rem; border:2px solid var(--border); margin-bottom:2rem; }
+  .form-card h3 { font-size:1.2rem; font-weight:700; color:var(--slate); margin-bottom:1.25rem; display:flex; align-items:center; gap:.5rem; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .success-msg {
+    display:none; background:linear-gradient(135deg,#D1FAE5,#A7F3D0);
+    border:1px solid var(--success); border-radius:14px; padding:1.25rem 1.5rem;
+    color:#065F46; font-weight:600; text-align:center; margin-top:1rem; font-size:.95rem;
+    animation:slideIn .3s ease;
+  }
+  @keyframes slideIn { from{transform:translateY(-10px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  /* ══════════════════════════════════════
+     API SECTION
+  ══════════════════════════════════════ */
+  .api-status-bar { display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+  .status-chip { display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .85rem; border-radius:20px; font-size:.8rem; font-weight:600; }
+  .status-200 { background:#D1FAE5; color:#065F46; }
+  .status-404 { background:#FEE2E2; color:#991B1B; }
+  .status-500 { background:#FEF3C7; color:#92400E; }
+  .users-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+  .user-card { background:var(--white); border-radius:16px; padding:1.25rem; border:2px solid var(--border); transition:all .2s; }
+  .user-card:hover { border-color:var(--teal); transform:translateY(-3px); box-shadow:var(--shadow); }
+  .user-avatar { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--amber),var(--teal)); display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; font-weight:700; color:var(--white); font-size:1.1rem; margin-bottom:.75rem; }
+  .user-name { font-family:'Poppins',sans-serif; font-weight:700; font-size:.95rem; color:var(--slate); }
+  .user-email { font-size:.8rem; color:var(--slate-light); margin-top:.2rem; }
+  .user-company { font-size:.78rem; color:var(--teal-dark); font-weight:500; margin-top:.3rem; }
+
+  /* ══════════════════════════════════════
+     PET ADOPTION
+  ══════════════════════════════════════ */
+  .adoption-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.25rem; }
+  .pet-card {
+    background:var(--white); border-radius:20px; overflow:hidden;
+    border:2px solid var(--border); transition:all .25s; cursor:pointer;
+    position:relative;
+  }
+  .pet-card:hover { transform:translateY(-5px); border-color:var(--teal); box-shadow:var(--shadow-lg); }
+  .pet-img { height:160px; display:flex; align-items:center; justify-content:center; font-size:5rem; position:relative; }
+  .pet-badge { position:absolute; top:10px; right:10px; font-size:.7rem; font-weight:700; padding:.25rem .6rem; border-radius:8px; font-family:'Poppins',sans-serif; }
+  .badge-available { background:var(--success); color:var(--white); }
+  .badge-pending { background:var(--amber); color:var(--white); }
+  .badge-adopted { background:var(--slate-light); color:var(--white); }
+  .privacy-badge { position:absolute; top:10px; left:10px; font-size:.65rem; font-weight:700; padding:.2rem .5rem; border-radius:6px; font-family:'Poppins',sans-serif; }
+  .badge-public { background:var(--teal-light); color:var(--teal-dark); }
+  .badge-private { background:var(--rose-light); color:var(--rose); }
+  .pet-body { padding:1.25rem; }
+  .pet-name { font-size:1.15rem; font-weight:700; color:var(--slate); margin-bottom:.2rem; }
+  .pet-info { font-size:.82rem; color:var(--slate-light); margin-bottom:.75rem; line-height:1.5; }
+  .pet-tags { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.9rem; }
+  .pet-tag { font-size:.72rem; font-weight:600; padding:.2rem .6rem; border-radius:6px; background:var(--warm); color:var(--brown); }
+
+  /* ══════════════════════════════════════
+     PET DETAIL (Private/Public)
+  ══════════════════════════════════════ */
+  .detail-section { }
+  .access-toggle { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+  .toggle-label { font-size:.85rem; font-weight:600; color:var(--slate-mid); }
+  .toggle-switch { position:relative; width:52px; height:28px; }
+  .toggle-switch input { opacity:0; width:0; height:0; }
+  .toggle-slider { position:absolute; cursor:pointer; inset:0; background:var(--border); border-radius:28px; transition:.3s; }
+  .toggle-slider:before { content:''; position:absolute; width:20px; height:20px; left:4px; bottom:4px; background:var(--white); border-radius:50%; transition:.3s; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+  input:checked + .toggle-slider { background:var(--teal); }
+  input:checked + .toggle-slider:before { transform:translateX(24px); }
+  .access-status { font-size:.82rem; font-weight:600; padding:.3rem .75rem; border-radius:8px; }
+  .access-granted { background:var(--teal-light); color:var(--teal-dark); }
+  .access-denied { background:var(--rose-light); color:var(--rose); }
+  .pet-detail-card {
+    background:var(--white); border-radius:24px; overflow:hidden;
+    border:2px solid var(--border); display:grid; grid-template-columns:300px 1fr; gap:0;
+    margin-bottom:1.5rem;
+  }
+  .pet-detail-img { background:var(--warm); display:flex; align-items:center; justify-content:center; font-size:8rem; padding:2rem; }
+  .pet-detail-info { padding:2rem; }
+  .pet-detail-name { font-size:2rem; font-weight:800; color:var(--slate); margin-bottom:.3rem; }
+  .pet-detail-breed { font-size:1rem; color:var(--slate-light); margin-bottom:1.25rem; }
+  .pet-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
+  .pet-stat { background:var(--warm); border-radius:12px; padding:.85rem; text-align:center; }
+  .pet-stat-val { font-family:'Poppins',sans-serif; font-weight:700; font-size:1.1rem; color:var(--slate); }
+  .pet-stat-lbl { font-size:.75rem; color:var(--slate-light); margin-top:.2rem; }
+  .pet-private-overlay {
+    background:linear-gradient(135deg,rgba(244,63,94,0.05),rgba(244,63,94,0.1));
+    border:2px dashed var(--rose); border-radius:16px; padding:2rem; text-align:center;
+    color:var(--rose); display:none;
+  }
+  .pet-private-overlay .lock { font-size:3rem; margin-bottom:.75rem; }
+  .pet-private-overlay h3 { font-size:1.2rem; font-weight:700; margin-bottom:.5rem; }
+  .pet-private-overlay p { font-size:.88rem; opacity:.8; }
+
+  /* ══════════════════════════════════════
+     REST vs SOAP & DEPLOY INFO
+  ══════════════════════════════════════ */
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:2rem; }
+  .info-card { background:var(--white); border-radius:20px; padding:1.75rem; border:2px solid var(--border); }
+  .info-card h3 { font-size:1.05rem; font-weight:700; color:var(--slate); margin-bottom:.75rem; display:flex; align-items:center; gap:.5rem; }
+  .info-card p { font-size:.87rem; color:var(--slate-light); line-height:1.65; }
+  .code-block { background:var(--slate); color:#A5F3FC; border-radius:10px; padding:.85rem 1rem; font-family:'Courier New',monospace; font-size:.78rem; line-height:1.6; margin-top:.75rem; overflow-x:auto; }
+
+  /* ══════════════════════════════════════
+     CASE STUDY
+  ══════════════════════════════════════ */
+  .case-study { background:linear-gradient(135deg,var(--slate),var(--slate-mid)); border-radius:24px; padding:2.5rem; color:var(--white); margin-bottom:2rem; }
+  .case-study h2 { font-size:1.6rem; font-weight:800; margin-bottom:.5rem; }
+  .case-study .sub { color:#94A3B8; font-size:.9rem; margin-bottom:2rem; }
+  .case-flow { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; }
+  .flow-step { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:1.25rem; text-align:center; }
+  .flow-step .icon { font-size:1.8rem; margin-bottom:.5rem; }
+  .flow-step h4 { font-size:.9rem; font-weight:700; margin-bottom:.3rem; }
+  .flow-step p { font-size:.75rem; color:#94A3B8; line-height:1.5; }
+
+  /* ══════════════════════════════════════
+     DEPLOY SECTION
+  ══════════════════════════════════════ */
+  .deploy-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:2rem; }
+  .deploy-card { background:var(--white); border-radius:16px; padding:1.4rem; border:2px solid var(--border); text-align:center; }
+  .deploy-card .icon { font-size:2rem; margin-bottom:.6rem; }
+  .deploy-card h4 { font-size:.95rem; font-weight:700; color:var(--slate); margin-bottom:.4rem; }
+  .deploy-card p { font-size:.8rem; color:var(--slate-light); line-height:1.5; }
+
+  /* ══════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════ */
+  .app-footer {
+    background:var(--slate); color:#94A3B8; text-align:center;
+    padding:1.5rem 2rem; font-size:.83rem;
+  }
+  .app-footer strong { color:var(--amber); font-family:'Poppins',sans-serif; }
+
+  /* ══════════════════════════════════════
+     LOADING SPINNER
+  ══════════════════════════════════════ */
+  .loader { display:flex; align-items:center; justify-content:center; gap:.75rem; padding:2rem; color:var(--slate-light); font-size:.9rem; }
+  .spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--amber); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ══════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════ */
+  @media(max-width:768px) {
+    .form-row { grid-template-columns:1fr; }
+    .info-grid { grid-template-columns:1fr; }
+    .pet-detail-card { grid-template-columns:1fr; }
+    .pet-stats { grid-template-columns:1fr 1fr 1fr; }
+    .hero { flex-direction:column; text-align:center; }
+    .hero-emoji { font-size:4rem; }
+    .hero-heading { font-size:1.6rem; }
+    .nav-tabs { overflow-x:auto; }
+    .header-inner { flex-wrap:wrap; gap:.75rem; }
+    .app-main { padding:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════ -->
+<div id="login-page" class="page active">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="paw">🐾</span>
+      <h1>Paw<span>Mart</span></h1>
+      <p>Your complete pet universe</p>
+    </div>
+
+    <div class="welcome-back" id="welcome-back-msg">👋 Welcome back, <span id="returning-user"></span>!</div>
+
+    <!-- Auth concept -->
+    <div class="api-key-section">
+      <label>🔑 Authentication Demo</label>
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="api-token-input" placeholder="Enter API token (e.g. pawmart-2024)" style="flex:1;min-width:180px;padding:.45rem .75rem;border:1.5px solid #E2E8F0;border-radius:8px;font-size:.82rem;font-family:inherit;">
+        <button class="btn btn-teal btn-sm" onclick="verifyToken()">Verify</button>
+      </div>
+      <div class="token-demo">
+        <span class="token-badge" id="token-badge">✅ Access Granted</span>
+      </div>
+      <small>Simulation only – any non-empty token grants access</small>
+    </div>
+
+    <div id="login-form-wrap">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="login-name" placeholder="e.g. Alex Johnson" />
+        <div class="field-error" id="err-login-name">Please enter your name.</div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+        <div class="field-error" id="err-login-email">Please enter a valid email.</div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Min 6 characters" />
+        <div class="field-error" id="err-login-pw">Password must be at least 6 characters.</div>
+      </div>
+      <button class="btn btn-primary" onclick="handleLogin()">🐾 Enter PawMart</button>
+    </div>
+    <div id="login-success" style="display:none;text-align:center;padding:1rem;background:linear-gradient(135deg,#D1FAE5,#A7F3D0);border-radius:12px;color:#065F46;font-weight:600;margin-top:.75rem;"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN APP PAGE
+══════════════════════════════════════ -->
+<div id="app-page" class="page">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="nav-logo">🐾 Paw<span>Mart</span></div>
+      <div class="live-clock" id="live-clock">⏰ Loading…</div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="supplies">🛍 Pet Supplies</button>
+        <button class="nav-tab" data-tab="adoption">🏠 Pet Adoption</button>
+        <button class="nav-tab" data-tab="details">🔍 Pet Details</button>
+        <button class="nav-tab" data-tab="api-info">⚙️ API & Info</button>
+      </nav>
+
+      <div class="header-right">
+        <div class="user-chip"><span class="dot"></span> <span id="header-username">User</span></div>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="app-main">
+
+    <!-- ── TAB 1: PET SUPPLIES ── -->
+    <section class="tab-content active" id="tab-supplies">
+      <div class="hero">
+        <div class="hero-text">
+          <span class="hero-badge">🔥 New Arrivals This Week</span>
+          <h1 class="hero-heading">Everything your <span>furry friend</span> deserves</h1>
+          <p class="hero-desc">Premium food, toys, grooming & more – delivered to your door with love.</p>
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="scrollToProducts()">Shop Now →</button>
+            <button class="btn btn-outline" style="border-color:rgba(255,255,255,0.2);color:#fff;" onclick="openOrderForm()">📦 Place Order</button>
+          </div>
+        </div>
+        <div class="hero-emoji">🐶</div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="products-header" id="products-top">
+        <div>
+          <h2 class="section-heading">Our Products</h2>
+          <p class="section-sub">Quality supplies for every pet</p>
+        </div>
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="food">🍖 Food</button>
+          <button class="filter-btn" data-filter="toys">🎾 Toys</button>
+          <button class="filter-btn" data-filter="grooming">🛁 Grooming</button>
+          <button class="filter-btn" data-filter="accessories">🎀 Accessories</button>
+        </div>
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+
+      <!-- ORDER FORM -->
+      <div class="form-card" id="order-form-section" style="display:none;">
+        <h3>📦 Place Your Order</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="order-name" placeholder="Your name"/>
+            <div class="field-error" id="err-order-name">Name is required.</div>
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="order-email" placeholder="you@example.com"/>
+            <div class="field-error" id="err-order-email">Valid email required.</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Select Course / Event *</label>
+            <select id="order-course">
+              <option value="">Choose an option…</option>
+              <option>🐕 Premium Dog Training Workshop</option>
+              <option>🐈 Cat Behaviour Masterclass</option>
+              <option>🐠 Aquarium Care Bootcamp</option>
+              <option>🦜 Bird Nutrition Seminar</option>
+              <option>🐾 First-Time Pet Owner Starter Pack</option>
+            </select>
+            <div class="field-error" id="err-order-course">Please select a course or event.</div>
+          </div>
+          <div class="form-group">
+            <label>Product Category *</label>
+            <select id="order-product">
+              <option value="">Choose product…</option>
+              <option>🍖 Premium Dog Food</option>
+              <option>🎾 Interactive Toy Bundle</option>
+              <option>🛁 Grooming Kit</option>
+              <option>🎀 Collar & Leash Set</option>
+              <option>🏠 Luxury Pet Bed</option>
+            </select>
+            <div class="field-error" id="err-order-product">Please choose a product.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="submitOrder()">✅ Submit Order</button>
+          <button class="btn btn-outline" onclick="document.getElementById('order-form-section').style.display='none'">Cancel</button>
+        </div>
+        <div class="success-msg" id="order-success">🎉 Order placed successfully! We'll send a confirmation to your email.</div>
+        <div id="order-dynamic-output" style="margin-top:1rem;padding:1rem;background:var(--warm);border-radius:12px;display:none;font-size:.88rem;line-height:1.7;"></div>
+      </div>
+    </section>
+
+    <!-- ── TAB 2: PET ADOPTION ── -->
+    <section class="tab-content" id="tab-adoption">
+      <h2 class="section-heading">🏠 Pet Adoption</h2>
+      <p class="section-sub">Give a loving home to a pet that needs one</p>
+      <div class="adoption-grid" id="adoption-grid"></div>
+    </section>
+
+    <!-- ── TAB 3: PET DETAILS (Private/Public) ── -->
+    <section class="tab-content" id="tab-details">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem;">
+        <div>
+          <h2 class="section-heading">🔍 Individual Pet Details</h2>
+          <p class="section-sub">Toggle between public and private view</p>
+        </div>
+        <div class="access-toggle">
+          <span class="toggle-label">🔓 Public</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="privacy-toggle" onchange="togglePrivacy()"/>
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">🔒 Private</span>
+          <span class="access-status access-granted" id="access-status-badge">✅ Access Granted</span>
+        </div>
+      </div>
+      <div id="pet-details-wrap"></div>
+    </section>
+
+    <!-- ── TAB 4: API & INFO ── -->
+    <section class="tab-content" id="tab-api-info">
+
+      <!-- API Status -->
+      <h2 class="section-heading">⚙️ API Data & Technical Info</h2>
+      <p class="section-sub">Live users from JSONPlaceholder API + REST vs SOAP concepts</p>
+
+      <div class="api-status-bar">
+        <span id="api-status-chip" class="status-chip">⏳ Fetching…</span>
+        <button class="btn btn-teal btn-sm" onclick="fetchUsers()">🔄 Reload Users</button>
+      </div>
+      <div class="users-grid" id="users-grid">
+        <div class="loader"><div class="spinner"></div> Loading users…</div>
+      </div>
+
+      <!-- REST vs SOAP -->
+      <h2 class="section-heading" style="margin-top:2rem;">📡 REST vs SOAP</h2>
+      <p class="section-sub">Understanding the two major web service paradigms</p>
+      <div class="info-grid">
+        <div class="info-card" style="border-color:var(--teal);">
+          <h3>🟢 REST (Representational State Transfer)</h3>
+          <p>REST is a lightweight, stateless architecture using standard HTTP methods (GET, POST, PUT, DELETE). Data is typically JSON. Easy to consume with <code>fetch()</code> in JavaScript.</p>
+          <div class="code-block">fetch('https://api.pawmart.com/pets')
+  .then(r => r.json())
+  .then(data => console.log(data))</div>
+        </div>
+        <div class="info-card" style="border-color:var(--amber);">
+          <h3>🟡 SOAP (Simple Object Access Protocol)</h3>
+          <p>SOAP is a protocol using XML envelopes for messaging. It's more rigid and verbose but supports enterprise features like WS-Security and ACID transactions.</p>
+          <div class="code-block">&lt;soapenv:Envelope&gt;
+  &lt;soapenv:Body&gt;
+    &lt;getPet&gt;
+      &lt;id&gt;1&lt;/id&gt;
+    &lt;/getPet&gt;
+  &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</div>
+        </div>
+        <div class="info-card">
+          <h3>📄 WSDL (Web Services Description Language)</h3>
+          <p>WSDL is an XML document that describes a SOAP web service – like a contract defining methods, parameters, and endpoints. Think of it as the API documentation for SOAP services.</p>
+        </div>
+        <div class="info-card" style="border-color:var(--rose);">
+          <h3>🔐 Authentication Concepts</h3>
+          <p><strong>API Key:</strong> A static secret token sent in headers. Simple but less secure.<br><br><strong>JWT (JSON Web Token):</strong> A signed, Base64-encoded token containing claims (user ID, expiry). Stateless and scalable.</p>
+          <div class="code-block">// JWT Header
+Authorization: Bearer eyJhbGci...
+
+// Payload (decoded)
+{ "sub":"user42","exp":1700000000 }</div>
+        </div>
+      </div>
+
+      <!-- Deployment Section -->
+      <h2 class="section-heading" style="margin-top:1rem;">🚀 Deployment Concepts</h2>
+      <p class="section-sub">How PawMart reaches the world</p>
+      <div class="deploy-grid">
+        <div class="deploy-card">
+          <div class="icon">🐙</div>
+          <h4>GitHub</h4>
+          <p>Version control & collaboration. Push code, open PRs, track issues – the backbone of modern dev workflows.</p>
+        </div>
+        <div class="deploy-card">
+          <div class="icon">▲</div>
+          <h4>Vercel</h4>
+          <p>Zero-config deployment for frontend apps. Connect GitHub repo → auto-deploy on every push.</p>
+        </div>
+        <div class="deploy-card">
+          <div class="icon">🌐</div>
+          <h4>Netlify</h4>
+          <p>JAMstack hosting with forms, serverless functions, split testing & CDN out of the box.</p>
+        </div>
+        <div class="deploy-card">
+          <div class="icon">🔒</div>
+          <h4>Environment Variables</h4>
+          <p>Store secrets (API keys, DB URLs) in <code>.env</code> files – never hard-code them in your source.</p>
+          <div style="font-family:monospace;font-size:.75rem;background:var(--warm);padding:.4rem .6rem;border-radius:6px;margin-top:.5rem;">API_KEY=sk-pawmart-xxx</div>
+        </div>
+      </div>
+
+      <!-- Case Study -->
+      <div class="case-study">
+        <h2>📚 Case Study – PawMart E-Commerce & Booking</h2>
+        <p class="sub">A real-world example of pet-care platform architecture</p>
+        <div class="case-flow">
+          <div class="flow-step"><div class="icon">👤</div><h4>User Registers</h4><p>Fills form → JWT issued → stored in localStorage</p></div>
+          <div class="flow-step"><div class="icon">🛍</div><h4>Browses & Filters</h4><p>REST API returns products → rendered dynamically via fetch</p></div>
+          <div class="flow-step"><div class="icon">🛒</div><h4>Adds to Cart</h4><p>sessionStorage tracks cart → totals computed client-side</p></div>
+          <div class="flow-step"><div class="icon">💳</div><h4>Checkout</h4><p>POST /orders with JWT → Stripe payment gateway integration</p></div>
+          <div class="flow-step"><div class="icon">📧</div><h4>Confirmation</h4><p>WebHook triggers → email via SendGrid → order tracked</p></div>
+          <div class="flow-step"><div class="icon">🐾</div><h4>Adoption Flow</h4><p>Pet listings → apply form → shelter API status update</p></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <strong>PawMart</strong> &mdash; Built with ❤️ for pets everywhere &nbsp;|&nbsp; Developed by <strong>Student Developer</strong> &nbsp;|&nbsp; &copy; 2024
+  </footer>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════
+const products = [
+  { id:1, name:'Premium Kibble', category:'food', price:'₹899', emoji:'🍖', desc:'High-protein dry food for adult dogs' },
+  { id:2, name:'Salmon Feast', category:'food', price:'₹749', emoji:'🐟', desc:'Grain-free wet food for cats' },
+  { id:3, name:'Puppy Formula', category:'food', price:'₹1,199', emoji:'🥣', desc:'Nutrition-rich formula for puppies' },
+  { id:4, name:'Feather Wand', category:'toys', price:'₹299', emoji:'🪶', desc:'Irresistible interactive cat toy' },
+  { id:5, name:'Rope Tug Set', category:'toys', price:'₹449', emoji:'🎾', desc:'Durable rope toys for aggressive chewers' },
+  { id:6, name:'Puzzle Feeder', category:'toys', price:'₹599', emoji:'🧩', desc:'Mental stimulation for smart dogs' },
+  { id:7, name:'Grooming Kit', category:'grooming', price:'₹1,499', emoji:'✂️', desc:'Complete 8-piece professional kit' },
+  { id:8, name:'Shampoo & Conditioner', category:'grooming', price:'₹649', emoji:'🛁', desc:'Natural oatmeal formula – gentle on skin' },
+  { id:9, name:'Dematting Comb', category:'grooming', price:'₹349', emoji:'🪮', desc:'Stainless steel double-sided comb' },
+  { id:10, name:'Floral Collar', category:'accessories', price:'₹399', emoji:'🌸', desc:'Adjustable breakaway safety collar' },
+  { id:11, name:'Luxury Pet Bed', category:'accessories', price:'₹2,499', emoji:'🛏', desc:'Memory foam orthopedic pet bed' },
+  { id:12, name:'Retractable Leash', category:'accessories', price:'₹799', emoji:'🦮', desc:'16ft retractable with LED light' },
+];
+
+const adoptionPets = [
+  { id:1, name:'Biscuit', species:'🐕', breed:'Labrador Mix', age:'2 yrs', gender:'Male', status:'available', isPrivate:false, tags:['vaccinated','neutered','friendly'], desc:'Gentle giant who loves cuddles and long walks.' },
+  { id:2, name:'Mochi', species:'🐈', breed:'Siamese', age:'3 yrs', gender:'Female', status:'available', isPrivate:false, tags:['indoor-only','vaccinated'], desc:'Elegant, talkative, and loves sunny windowsills.' },
+  { id:3, name:'Peanut', species:'🐰', breed:'Holland Lop', age:'1 yr', gender:'Male', status:'pending', isPrivate:true, tags:['litter-trained','quiet'], desc:'Fluffy and calm – perfect for apartment life.' },
+  { id:4, name:'Koda', species:'🐕', breed:'Husky Mix', age:'4 yrs', gender:'Male', status:'available', isPrivate:false, tags:['energetic','trained','vaccinated'], desc:'Adventurous trail partner seeking active family.' },
+  { id:5, name:'Luna', species:'🐈', breed:'Persian', age:'5 yrs', gender:'Female', status:'adopted', isPrivate:true, tags:['senior-cat','gentle'], desc:'Retired show cat, now ready for a quiet home.' },
+  { id:6, name:'Ginger', species:'🐹', breed:'Syrian Hamster', age:'6 mo', gender:'Female', status:'available', isPrivate:false, tags:['nocturnal','cage-included'], desc:'Tiny explorer who loves her wheel.' },
+];
+
+const detailPet = {
+  name:'Koda', species:'🐕', breed:'Husky Mix', age:'4 years', weight:'28 kg',
+  color:'Black & White', vaccinated:'Yes', neutered:'Yes', microchipped:'Yes',
+  personality:'Energetic, loyal, and loves outdoor adventures. Knows sit, stay, fetch.',
+  medicalHistory:'Full vaccination record. Annual vet check done. No known allergies.',
+  trainingHistory:'Basic obedience trained. Leash-trained. Crate-trained.',
+  adoptionFee:'₹2,500',
+};
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let currentFilter = 'all';
+let isPrivateMode = false;
+
+// ════════════════════════════════════════
+// LOGIN LOGIC
+// ════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('pawmart_user');
+  if (saved) {
+    const u = JSON.parse(saved);
+    document.getElementById('returning-user').textContent = u.name;
+    document.getElementById('welcome-back-msg').style.display = 'block';
+    document.getElementById('login-name').value = u.name;
+    document.getElementById('login-email').value = u.email;
+  }
+  // welcome message after 1 second
+  setTimeout(() => {
+    if (!saved) {
+      const wc = document.getElementById('welcome-back-msg');
+      wc.textContent = '🐾 Welcome to PawMart! Sign in to explore.';
+      wc.style.display = 'block';
+    }
+  }, 1000);
+});
+
+const verifyToken = () => {
+  const t = document.getElementById('api-token-input').value.trim();
+  const badge = document.getElementById('token-badge');
+  if (t) {
+    badge.textContent = '✅ Access Granted – Token: ' + t.substring(0,8) + '…';
+    badge.style.display = 'inline-flex';
+    badge.style.background = '#D1FAE5'; badge.style.color = '#065F46';
+  } else {
+    badge.textContent = '❌ No Token – Access Denied';
+    badge.style.display = 'inline-flex';
+    badge.style.background = '#FEE2E2'; badge.style.color = '#991B1B';
+  }
+};
+
+const validateEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+const showErr = (id, show) => {
+  document.getElementById(id).style.display = show ? 'block' : 'none';
+};
+
+const handleLogin = () => {
+  const name = document.getElementById('login-name').value.trim();
+  const email = document.getElementById('login-email').value.trim();
+  const pw = document.getElementById('login-password').value;
+  let valid = true;
+  if (!name) { showErr('err-login-name', true); valid = false; } else showErr('err-login-name', false);
+  if (!validateEmail(email)) { showErr('err-login-email', true); valid = false; } else showErr('err-login-email', false);
+  if (pw.length < 6) { showErr('err-login-pw', true); valid = false; } else showErr('err-login-pw', false);
+  if (!valid) return;
+
+  localStorage.setItem('pawmart_user', JSON.stringify({ name, email }));
+  const s = document.getElementById('login-success');
+  s.textContent = `🎉 Welcome, ${name}! Entering PawMart…`;
+  s.style.display = 'block';
+
+  setTimeout(() => {
+    document.getElementById('login-page').classList.remove('active');
+    document.getElementById('app-page').classList.add('active');
+    document.getElementById('header-username').textContent = name;
+    initApp();
+  }, 1200);
+};
+
+const handleLogout = () => {
+  document.getElementById('app-page').classList.remove('active');
+  document.getElementById('login-page').classList.add('active');
+  document.getElementById('login-success').style.display = 'none';
+  clearInterval(clockInterval);
+};
+
+// ════════════════════════════════════════
+// INIT APP
+// ════════════════════════════════════════
+let clockInterval;
+const initApp = () => {
+  renderProducts('all');
+  renderAdoption();
+  renderPetDetail();
+  fetchUsers();
+  startClock();
+  setupNavTabs();
+  setupFilters();
+};
+
+// ════════════════════════════════════════
+// LIVE CLOCK
+// ════════════════════════════════════════
+const startClock = () => {
+  const tick = () => {
+    const now = new Date();
+    document.getElementById('live-clock').textContent =
+      '⏰ ' + now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  };
+  tick();
+  clockInterval = setInterval(tick, 1000);
+};
+
+// ════════════════════════════════════════
+// NAV TABS
+// ════════════════════════════════════════
+const setupNavTabs = () => {
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+};
+
+// ════════════════════════════════════════
+// PRODUCTS
+// ════════════════════════════════════════
+const renderProducts = filter => {
+  const grid = document.getElementById('product-grid');
+  const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="product-img">${p.emoji}</div>
+      <div class="product-body">
+        <div class="product-category">${p.category}</div>
+        <div class="card-title">${p.name}</div>
+        <div class="product-price">${p.price}</div>
+        <p style="font-size:.78rem;color:var(--slate-light);margin-bottom:.75rem;">${p.desc}</p>
+        <div class="product-footer">
+          <button class="btn btn-primary btn-sm" onclick="quickOrder('${p.name}')">Add to Cart</button>
+          <button class="btn btn-outline btn-sm">♡</button>
+        </div>
+      </div>
+    </div>`).join('');
+};
+
+const setupFilters = () => {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts(btn.dataset.filter);
+    });
+  });
+};
+
+const scrollToProducts = () => document.getElementById('products-top').scrollIntoView({ behavior:'smooth' });
+const openOrderForm = () => {
+  document.getElementById('order-form-section').style.display = 'block';
+  document.getElementById('order-form-section').scrollIntoView({ behavior:'smooth' });
+};
+const quickOrder = name => {
+  document.getElementById('order-product').value = '';
+  openOrderForm();
+  document.getElementById('order-dynamic-output').style.display = 'none';
+  document.getElementById('order-success').style.display = 'none';
+};
+
+// ════════════════════════════════════════
+// ORDER FORM SUBMIT
+// ════════════════════════════════════════
+const submitOrder = () => {
+  const name = document.getElementById('order-name').value.trim();
+  const email = document.getElementById('order-email').value.trim();
+  const course = document.getElementById('order-course').value;
+  const product = document.getElementById('order-product').value;
+  let valid = true;
+  if (!name) { showErr('err-order-name', true); valid = false; } else showErr('err-order-name', false);
+  if (!validateEmail(email)) { showErr('err-order-email', true); valid = false; } else showErr('err-order-email', false);
+  if (!course) { showErr('err-order-course', true); valid = false; } else showErr('err-order-course', false);
+  if (!product) { showErr('err-order-product', true); valid = false; } else showErr('err-order-product', false);
+  if (!valid) return;
+
+  const out = document.getElementById('order-dynamic-output');
+  out.innerHTML = `
+    <strong>📋 Order Summary</strong><br>
+    👤 <b>Name:</b> ${name}<br>
+    📧 <b>Email:</b> ${email}<br>
+    📚 <b>Event:</b> ${course}<br>
+    🛍 <b>Product:</b> ${product}<br>
+    🕒 <b>Placed at:</b> ${new Date().toLocaleString('en-IN')}
+  `;
+  out.style.display = 'block';
+  document.getElementById('order-success').style.display = 'block';
+  sessionStorage.setItem('last_order', JSON.stringify({ name, email, course, product }));
+};
+
+// ════════════════════════════════════════
+// ADOPTION RENDER
+// ════════════════════════════════════════
+const renderAdoption = () => {
+  const grid = document.getElementById('adoption-grid');
+  grid.innerHTML = adoptionPets.map(p => `
+    <div class="pet-card" onclick="viewPetDetail(${p.id})">
+      <div class="pet-img" style="background:${p.status==='adopted'?'#F1F5F9':p.status==='pending'?'#FFFBEB':'var(--teal-light)'}">
+        ${p.species}
+        <span class="pet-badge badge-${p.status}">${p.status}</span>
+        <span class="privacy-badge badge-${p.isPrivate?'private':'public'}">${p.isPrivate?'🔒 Private':'🌐 Public'}</span>
+      </div>
+      <div class="pet-body">
+        <div class="pet-name">${p.name}</div>
+        <div class="pet-info">${p.breed} · ${p.age} · ${p.gender}</div>
+        <div class="pet-tags">${p.tags.map(t=>`<span class="pet-tag">${t}</span>`).join('')}</div>
+        <p style="font-size:.82rem;color:var(--slate-light);margin-bottom:1rem;">${p.desc}</p>
+        <button class="btn btn-teal btn-sm" style="width:100%;" onclick="event.stopPropagation();adoptPet('${p.name}','${p.status}')">
+          ${p.status==='adopted'?'✅ Adopted':'🏠 Adopt '+p.name}
+        </button>
+      </div>
+    </div>`).join('');
+};
+
+const adoptPet = (name, status) => {
+  if (status === 'adopted') return alert(`${name} has already found a home! 🏠`);
+  alert(`🐾 Application submitted for ${name}! Our team will contact you within 24 hours.`);
+};
+
+const viewPetDetail = id => {
+  const pet = adoptionPets.find(p => p.id === id);
+  if (!pet) return;
+  // Switch to details tab
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-tab="details"]').classList.add('active');
+  document.getElementById('tab-details').classList.add('active');
+
+  isPrivateMode = pet.isPrivate;
+  document.getElementById('privacy-toggle').checked = pet.isPrivate;
+  togglePrivacy();
+  renderPetDetail(pet);
+};
+
+// ════════════════════════════════════════
+// PET DETAIL
+// ════════════════════════════════════════
+const renderPetDetail = (pet = null) => {
+  const d = pet || detailPet;
+  const wrap = document.getElementById('pet-details-wrap');
+  wrap.innerHTML = `
+    <div class="pet-detail-card" id="pet-detail-card">
+      <div class="pet-detail-img">${d.species || '🐕'}</div>
+      <div class="pet-detail-info">
+        <div class="pet-detail-name">${d.name}</div>
+        <div class="pet-detail-breed">${d.breed} · ${d.gender || 'N/A'}</div>
+        <div class="pet-stats">
+          <div class="pet-stat"><div class="pet-stat-val">${d.age}</div><div class="pet-stat-lbl">Age</div></div>
+          <div class="pet-stat"><div class="pet-stat-val">${d.weight || '—'}</div><div class="pet-stat-lbl">Weight</div></div>
+          <div class="pet-stat"><div class="pet-stat-val">${d.vaccinated || (d.tags && d.tags.includes('vaccinated') ? 'Yes' : 'N/A')}</div><div class="pet-stat-lbl">Vaccinated</div></div>
+        </div>
+        <div style="font-size:.88rem;color:var(--slate-light);line-height:1.7;margin-bottom:1rem;">
+          <strong style="color:var(--slate);">About:</strong> ${d.desc || d.personality}
+        </div>
+        <div id="private-info">
+          <div style="background:var(--rose-light);border-radius:10px;padding:1rem;font-size:.85rem;line-height:1.7;color:var(--slate-mid);">
+            <strong>🔒 Private Info:</strong><br>
+            🏥 Medical: ${d.medicalHistory || (d.tags ? d.tags.join(', ') : 'See shelter')}<br>
+            🎓 Training: ${d.trainingHistory || 'Basic trained'}<br>
+            💰 Adoption Fee: ${d.adoptionFee || '₹1,500'}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pet-private-overlay" id="private-overlay">
+      <div class="lock">🔒</div>
+      <h3>Private Information</h3>
+      <p>This section contains sensitive medical and training records. Toggle to Public mode to view all details, or log in with shelter credentials.</p>
+    </div>
+  `;
+  applyPrivacyMode();
+};
+
+const togglePrivacy = () => {
+  isPrivateMode = document.getElementById('privacy-toggle').checked;
+  const badge = document.getElementById('access-status-badge');
+  if (isPrivateMode) {
+    badge.textContent = '🔒 Private Mode';
+    badge.className = 'access-status access-denied';
+  } else {
+    badge.textContent = '✅ Access Granted';
+    badge.className = 'access-status access-granted';
+  }
+  applyPrivacyMode();
+};
+
+const applyPrivacyMode = () => {
+  const card = document.getElementById('pet-detail-card');
+  const overlay = document.getElementById('private-overlay');
+  const priv = document.getElementById('private-info');
+  if (!card || !overlay) return;
+  if (isPrivateMode) {
+    card.style.display = 'none';
+    overlay.style.display = 'block';
+  } else {
+    card.style.display = 'grid';
+    overlay.style.display = 'none';
+    if (priv) priv.style.display = 'block';
+  }
+};
+
+// ════════════════════════════════════════
+// FETCH API – USERS
+// ════════════════════════════════════════
+const fetchUsers = async () => {
+  const grid = document.getElementById('users-grid');
+  const chip = document.getElementById('api-status-chip');
+  grid.innerHTML = '<div class="loader"><div class="spinner"></div> Fetching from API…</div>';
+  chip.className = 'status-chip';
+  chip.textContent = '⏳ Fetching…';
+
+  try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/users');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const users = await res.json();
+
+    chip.className = 'status-chip status-200';
+    chip.textContent = `✅ 200 OK – ${users.length} users loaded`;
+
+    grid.innerHTML = users.map(u => `
+      <div class="user-card">
+        <div class="user-avatar">${u.name.charAt(0)}</div>
+        <div class="user-name">${u.name}</div>
+        <div class="user-email">📧 ${u.email}</div>
+        <div class="user-company">🏢 ${u.company.name}</div>
+        <div style="font-size:.76rem;color:var(--slate-light);margin-top:.3rem;">📍 ${u.address.city} · 🌐 ${u.website}</div>
+      </div>`).join('');
+
+  } catch (err) {
+    chip.className = 'status-chip status-500';
+    chip.textContent = `❌ Error – ${err.message}`;
+    grid.innerHTML = `<div style="padding:1.5rem;color:var(--error);font-weight:600;">⚠️ Failed to load data: ${err.message}</div>`;
+  }
+};
+
+// ════════════════════════════════════════
+// DOM LOADED → CHECK STORED SESSION
+// ════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // auto login if user stored
+  const stored = localStorage.getItem('pawmart_user');
+  if (stored) {
+    const u = JSON.parse(stored);
+    document.getElementById('header-username').textContent = u.name;
+    document.getElementById('returning-user').textContent = u.name;
+    document.getElementById('welcome-back-msg').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
