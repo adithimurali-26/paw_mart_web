@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
   :root {
+    
     --cream: #FFF8F0;
     --warm: #FFF0DC;
     --amber: #F59E0B;
@@ -247,7 +248,6 @@
   /* ══════════════════════════════════════
      PET DETAIL (Private/Public)
   ══════════════════════════════════════ */
-  .detail-section { }
   .access-toggle { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
   .toggle-label { font-size:.85rem; font-weight:600; color:var(--slate-mid); }
   .toggle-switch { position:relative; width:52px; height:28px; }
@@ -440,9 +440,9 @@
       <!-- FILTER BAR -->
       <div class="products-header" id="products-top">
         <div>
-          <h2 class="section-heading">Our Products</h2>
-          <p class="section-sub">Quality supplies for every pet</p>
-        </div>
+            <h2 class="section-heading">Our Products <span id="product-count" style="font-size:0.9rem;font-weight:600;color:var(--slate-light);margin-left:.6rem;"></span></h2>
+            <p class="section-sub">Quality supplies for every pet</p>
+          </div>
         <div class="filter-bar">
           <button class="filter-btn active" data-filter="all">All</button>
           <button class="filter-btn" data-filter="food">🍖 Food</button>
@@ -649,6 +649,50 @@ const products = [
   { id:10, name:'Floral Collar', category:'accessories', price:'₹399', emoji:'🌸', desc:'Adjustable breakaway safety collar' },
   { id:11, name:'Luxury Pet Bed', category:'accessories', price:'₹2,499', emoji:'🛏', desc:'Memory foam orthopedic pet bed' },
   { id:12, name:'Retractable Leash', category:'accessories', price:'₹799', emoji:'🦮', desc:'16ft retractable with LED light' },
+
+  // Additional food product entries (from user-provided table)
+  { id:13, name:'Dog — Dry Food', category:'food', price:'₹799', emoji:'🐕', desc:'Popular: Pedigree, Royal Canin, Drools, Farmina N&D, Orijen' },
+  { id:14, name:'Dog — Wet Food', category:'food', price:'₹249', emoji:'🐕', desc:'Popular: Pedigree Gravy, Royal Canin Wet Food, Cesar' },
+  { id:15, name:'Dog — Puppy Food', category:'food', price:'₹899', emoji:'🐕', desc:'Popular: Pedigree Puppy, Drools Puppy, Royal Canin Puppy' },
+  { id:16, name:'Dog — Treats & Biscuits', category:'food', price:'₹199', emoji:'🐕', desc:'Popular: Biscrok, Chip Chops, Goodies, JerHigh' },
+
+  { id:17, name:'Cat — Dry Food', category:'food', price:'₹699', emoji:'🐈', desc:'Popular: Whiskas, Me-O, Royal Canin, Purepet' },
+  { id:18, name:'Cat — Wet Food', category:'food', price:'₹199', emoji:'🐈', desc:'Popular: Sheba, Whiskas Wet Food, Me-O Wet Food' },
+  { id:19, name:'Cat — Kitten Food', category:'food', price:'₹849', emoji:'🐈', desc:'Popular: Royal Canin Kitten, Whiskas Junior' },
+  { id:20, name:'Cat — Treats', category:'food', price:'₹149', emoji:'🐈', desc:'Popular: Temptations, Me-O Creamy Treats' },
+
+  { id:21, name:'Parrot — Seed Mix', category:'food', price:'₹399', emoji:'🦜', desc:'Popular: Vitapol, ZuPreem, Kaytee' },
+  { id:22, name:'Parrot — Pellets', category:'food', price:'₹449', emoji:'🦜', desc:"Popular: Harrison’s Bird Food, ZuPreem FruitBlend" },
+  { id:23, name:'Parrot — Healthy Snacks', category:'food', price:'₹179', emoji:'🦜', desc:'Sunflower Seeds, Nuts, Dried Fruits' },
+
+  { id:24, name:'Fish — Fish Flakes', category:'food', price:'₹249', emoji:'🐠', desc:'Popular: TetraBits, Taiyo, Optimum' },
+  { id:25, name:'Fish — Fish Pellets', category:'food', price:'₹299', emoji:'🐠', desc:'Popular: Hikari, Optimum, Tetra' },
+  { id:26, name:'Fish — Goldfish Food', category:'food', price:'₹219', emoji:'🐠', desc:'Popular: Taiyo Goldfish Feed, Hikari Gold' },
+
+  { id:27, name:'Rabbit — Pellet Food', category:'food', price:'₹349', emoji:'🐇', desc:"Popular: Vitapol Rabbit Food, ZuPreem Nature’s Promise" },
+  { id:28, name:'Rabbit — Hay', category:'food', price:'₹299', emoji:'🐇', desc:'Timothy Hay, Alfalfa Hay' },
+  { id:29, name:'Rabbit — Treats', category:'food', price:'₹169', emoji:'🐇', desc:'Dried Carrot Chips, Herbal Mix' },
+
+  { id:30, name:'Hamster — Seed Mix', category:'food', price:'₹179', emoji:'🐹', desc:'Popular: Vitakraft, Kaytee Fiesta' },
+  { id:31, name:'Hamster — Pellet Food', category:'food', price:'₹199', emoji:'🐹', desc:'Sunburst Gourmet Blend' },
+  { id:32, name:'Hamster — Treats', category:'food', price:'₹129', emoji:'🐹', desc:'Corn Sticks, Nut Mix' },
+
+  { id:33, name:'Guinea Pig — Pellet Food', category:'food', price:'₹299', emoji:'🐁', desc:'Popular: Oxbow Essentials, Vitakraft' },
+  { id:34, name:'Guinea Pig — Hay', category:'food', price:'₹279', emoji:'🐁', desc:'Timothy Hay, Meadow Hay' },
+  { id:35, name:'Guinea Pig — Vitamin Treats', category:'food', price:'₹159', emoji:'🐁', desc:'Vitamin C Treats, Veggie Snacks' },
+
+  { id:36, name:'Turtle — Turtle Sticks', category:'food', price:'₹249', emoji:'🐢', desc:'Popular: Taiyo Turtle Food, Tetra ReptoMin' },
+  { id:37, name:'Turtle — Dried Shrimp', category:'food', price:'₹199', emoji:'🐢', desc:'Popular: Hikari Turtle Delite' },
+  { id:38, name:'Turtle — Floating Pellets', category:'food', price:'₹229', emoji:'🐢', desc:'Aqua Nature Turtle Food' },
+
+  { id:39, name:'Bird — Seed Mix (Lovebirds/Budgies)', category:'food', price:'₹329', emoji:'🐦', desc:'Popular: Vitapol, Prestige, Rio' },
+  { id:40, name:'Bird — Millet Spray', category:'food', price:'₹149', emoji:'🐦', desc:'Natural Millet Treats' },
+  { id:41, name:'Bird — Pellets', category:'food', price:'₹349', emoji:'🐦', desc:'ZuPreem Bird Pellets' },
+
+  { id:42, name:'Persian — Hairball Control Food', category:'food', price:'₹899', emoji:'🐈', desc:'Royal Canin Persian Adult — hairball control formula' },
+  { id:43, name:'Labrador — Breed Specific Food', category:'food', price:'₹999', emoji:'🐕', desc:'Royal Canin Labrador Adult — breed-specific nutrition' },
+  { id:44, name:'German Shepherd — Breed Specific', category:'food', price:'₹999', emoji:'🐕', desc:'Drools Focus, Royal Canin German Shepherd' },
+  { id:45, name:'Pug — Weight Control Food', category:'food', price:'₹799', emoji:'🐕', desc:'Pedigree PRO, Farmina Low Calorie — weight control formulas' },
 ];
 
 const adoptionPets = [
@@ -794,6 +838,10 @@ const setupNavTabs = () => {
 const renderProducts = filter => {
   const grid = document.getElementById('product-grid');
   const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+  // update product count for debugging/visibility
+  const countEl = document.getElementById('product-count');
+  if (countEl) countEl.textContent = `(${filtered.length})`;
+
   grid.innerHTML = filtered.map(p => `
     <div class="product-card">
       <div class="product-img">${p.emoji}</div>
